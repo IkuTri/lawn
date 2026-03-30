@@ -94,7 +94,10 @@ http.route({
 
 function verifyTranscoderSecret(request: Request): boolean {
   const secret = process.env.TRANSCODER_WEBHOOK_SECRET || "";
-  if (!secret) return true;
+  if (!secret) {
+    console.error("TRANSCODER_WEBHOOK_SECRET is not set — rejecting all transcode requests");
+    return false;
+  }
   return (request.headers.get("x-transcoder-secret") || "") === secret;
 }
 
